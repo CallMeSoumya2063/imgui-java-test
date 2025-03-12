@@ -1,0 +1,33 @@
+name: Build Linux arm64 native libraries
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux-arm64:
+    runs-on: ubuntu-22.04-arm  # use a GitHub-hosted Linux arm64 runner
+    steps:
+      - name: Checkout code (with submodules)
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8-jdk ant mingw-w64
+
+      - name: Build native libraries
+        run: ./gradlew imgui-binding:generateLibs -Denvs=linux -Dlocal
+
+      - name: Run example application (optional)
+        run: ./gradlew example:run -PlibPath=../imgui-binding/build/libsNative/linux64
+
+      - name: Upload native libraries artifact (optional)
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-arm64-native-libs
+          path: imgui-binding/build/libsNative/linux64
