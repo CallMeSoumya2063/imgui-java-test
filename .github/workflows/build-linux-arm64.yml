@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew example:run -PlibPath=../imgui-binding/build/libsNative/linux64
 
       - name: Upload native libraries artifact (optional)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-arm64-native-libs
           path: imgui-binding/build/libsNative/linux64
